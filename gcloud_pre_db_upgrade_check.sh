@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 ##-------------------------------------------------------------------------------------------------------------##
-##   Name:        glcoud_pre_db_upgrade_check.sh
+##   Name:        gcloud_pre_db_upgrade_check.sh
 ##   Purpose:     Pre-check a GCP instance for any possible issues before upgrading the database
 ##
 ##   Author:      Matt Pearson
