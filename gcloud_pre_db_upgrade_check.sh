@@ -8,7 +8,10 @@
 ##   Version:     Date                          Changes
 ##
 ##   1.0          17th Nov 2024                 Original
-##   1.1          21st Nov 2024                 Added in the DB loop
+##   1.1          20st Nov 2024                 Added in the DB loop
+##   1.2          21st Nov 2024                 Added in the IF statement for version for LC_COLLATE
+##   1.3          21st Nov 2024                 Added in a predicate to ensure ONLY installed extensions
+##                                              were checked and not to look at the cloudsqladmin database
 ##
 ##   Notes:
 ##   This script currently checks and reports on:
@@ -29,7 +32,7 @@ export PATH=/bin:/usr/bin:/usr/sbin:/sbin:$PATH
 export SCRIPT_NAME=$( basename $0 )
 export SCRIPT_PREFIX=$( echo "${SCRIPT_NAME}" | awk -F. '{ print $1 }' )
 export HOSTNAME=$( hostname -s )
-export VERSION_NO="1.1"
+export VERSION_NO="1.3"
 
 ## Files
 
@@ -198,16 +201,33 @@ fi
 
 ## Check for LC_COLLATE
 
-SQL_STMT="
-SELECT  d.datname as dbname,
-        pg_catalog.pg_get_userbyid(d.datdba) as dbowner,
-        pg_catalog.pg_encoding_to_char(d.encoding) as encoding,
-        CASE d.datlocprovider WHEN 'c' THEN 'libc' WHEN 'i' THEN 'icu' END AS locale_provider,
-        d.datcollate as collate,
-        d.datctype as ctype
-FROM    pg_catalog.pg_database d
-JOIN    pg_catalog.pg_tablespace t on d.dattablespace = t.oid
-ORDER BY 1;"
+## Check for version as datlocprovider is a new feature in PG16 and above
+
+if [[ $( cat $VERSION_OUTPUT | awk -F, '{ print $1 }' | grep -v ^$ |  awk '{ print $2 }' ) < 16 ]]; then
+
+        SQL_STMT="
+                SELECT  d.datname as dbname,
+                        pg_catalog.pg_get_userbyid(d.datdba) as dbowner,
+                        pg_catalog.pg_encoding_to_char(d.encoding) as encoding,
+                        d.datcollate as collate,
+                        d.datctype as ctype
+                FROM    pg_catalog.pg_database d
+                JOIN    pg_catalog.pg_tablespace t on d.dattablespace = t.oid
+                ORDER BY 1;"
+else
+
+        SQL_STMT="
+                SELECT  d.datname as dbname,
+                        pg_catalog.pg_get_userbyid(d.datdba) as dbowner,
+                        pg_catalog.pg_encoding_to_char(d.encoding) as encoding,
+                        CASE d.datlocprovider WHEN 'c' THEN 'libc' WHEN 'i' THEN 'icu' END AS locale_provider,
+                        d.datcollate as collate,
+                        d.datctype as ctype
+                FROM    pg_catalog.pg_database d
+                JOIN    pg_catalog.pg_tablespace t on d.dattablespace = t.oid
+                ORDER BY 1;"
+
+fi
 
 psql ${SQL_CONNECT} -c "${SQL_STMT}" -P "footer=off" 2>$PGSQL_ERROR_FILE > $SQL_TEMP_FILE
 
@@ -219,7 +239,7 @@ echo -e "LC Collate Check:\n$( cat $SQL_TEMP_FILE )\n"
 
 SQL_STMT="SELECT  datname
           FROM    pg_stat_database
-          WHERE   datname NOT IN ('template0', 'template1')
+          WHERE   datname NOT IN ('template0', 'template1', 'cloudsqladmin', 'postgres')
           ORDER BY 1;"
 
 [ $VERBOSE ] && echo -e "SQL db list statement: ${SQL_STMT}"
@@ -232,7 +252,7 @@ psql_err_check ${SQL_STMT}
 
 for DB in $( cat $DB_FILE_LIST )
 do
-        #echo -e "DB: $DB"
+        echo -e "DB: $DB"
 
         ## Change the Connection String
 
@@ -242,8 +262,9 @@ do
 
         SQL_STMT="SELECT  *
                   FROM    pg_available_extensions
-                  WHERE   upper(name) LIKE '%POSTGIS%'
-                  OR      upper(name) IN ('pgRouting', 'pg_squeeze');"
+                  WHERE   (( upper(name) LIKE '%POSTGIS%' OR upper(name) IN ('pgRouting', 'pg_squeeze') ))
+                  AND     installed_version IS NOT NULL;
+                  ORDER BY 1;"
 
         psql ${SQL_CONNECT} -c "${SQL_STMT}" -t 2>$PGSQL_ERROR_FILE > ${DB_EXT_FILE}
 
