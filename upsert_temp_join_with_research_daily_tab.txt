@@ -247,3 +247,214 @@ oops=444)
  Execution Time: 919.906 ms
 (54 rows)
 
+
+                                                                                              QUERY PLAN
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------
+ Append  (cost=0.69..40873.70 rows=168730 width=58) (actual time=40.989..800.151 rows=277225 loops=1)
+   Buffers: shared hit=324135 read=5, local hit=40
+   ->  Nested Loop  (cost=0.69..3832.00 rows=8253 width=55) (actual time=14.368..14.369 rows=0 loops=1)
+         Output: d.symbol, d.source, d.field, d.date, d.value
+         Buffers: shared hit=4440, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t  (cost=0.00..16.50 rows=650 width=96) (actual time=0.016..0.082 rows=444 loops=1)
+               Output: t.symbol, t.source, t.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=55) (actual time=0.032..0.032 rows=0 loops=444)
+               Buffers: shared hit=4440
+               ->  Index Scan using "28840_28406_daily_pkey" on _timescaledb_internal._hyper_1_28840_chunk d  (cost=0.69..2.92 rows=1 width=56) (actual time=0.015..0.015 ro
+ws=0 loops=444)
+                     Output: d.symbol, d.source, d.field, d.date, d.value
+                     Index Cond: ((d.symbol = t.symbol) AND (d.source = t.source) AND (d.field = t.field) AND (d.date >= '2015-01-25'::date) AND (d.date <= '2016-01-25'::da
+te))
+                     Buffers: shared hit=2220
+               ->  Index Scan using "28841_28407_daily_pkey" on _timescaledb_internal._hyper_1_28841_chunk d_1  (cost=0.69..2.92 rows=1 width=55) (actual time=0.016..0.016
+rows=0 loops=444)
+                     Output: d_1.symbol, d_1.source, d_1.field, d_1.date, d_1.value
+                     Index Cond: ((d_1.symbol = t.symbol) AND (d_1.source = t.source) AND (d_1.field = t.field) AND (d_1.date >= '2015-01-25'::date) AND (d_1.date <= '2016-
+01-25'::date))
+                     Buffers: shared hit=2220
+   ->  Nested Loop  (cost=0.69..3832.00 rows=8632 width=55) (actual time=10.913..10.913 rows=0 loops=1)
+         Output: d_2.symbol, d_2.source, d_2.field, d_2.date, d_2.value
+         Buffers: shared hit=4440, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_1  (cost=0.00..16.50 rows=650 width=96) (actual time=0.009..0.051 rows=444 loops=1)
+               Output: t_1.symbol, t_1.source, t_1.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=55) (actual time=0.024..0.024 rows=0 loops=444)
+               Buffers: shared hit=4440
+               ->  Index Scan using "28842_28408_daily_pkey" on _timescaledb_internal._hyper_1_28842_chunk d_2  (cost=0.69..2.92 rows=1 width=55) (actual time=0.014..0.014
+rows=0 loops=444)
+                     Output: d_2.symbol, d_2.source, d_2.field, d_2.date, d_2.value
+                     Index Cond: ((d_2.symbol = t_1.symbol) AND (d_2.source = t_1.source) AND (d_2.field = t_1.field) AND (d_2.date >= '2016-01-25'::date) AND (d_2.date <=
+'2017-01-25'::date))
+                     Buffers: shared hit=2220
+               ->  Index Scan using "28841_28407_daily_pkey" on _timescaledb_internal._hyper_1_28841_chunk d_3  (cost=0.69..2.92 rows=1 width=55) (actual time=0.010..0.010
+rows=0 loops=444)
+                     Output: d_3.symbol, d_3.source, d_3.field, d_3.date, d_3.value
+                     Index Cond: ((d_3.symbol = t_1.symbol) AND (d_3.source = t_1.source) AND (d_3.field = t_1.field) AND (d_3.date >= '2016-01-25'::date) AND (d_3.date <=
+'2017-01-25'::date))
+                     Buffers: shared hit=2220
+   ->  Nested Loop  (cost=0.69..3832.00 rows=8629 width=55) (actual time=10.776..10.776 rows=0 loops=1)
+         Output: d_4.symbol, d_4.source, d_4.field, d_4.date, d_4.value
+         Buffers: shared hit=4440, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_2  (cost=0.00..16.50 rows=650 width=96) (actual time=0.009..0.052 rows=444 loops=1)
+               Output: t_2.symbol, t_2.source, t_2.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=55) (actual time=0.024..0.024 rows=0 loops=444)
+               Buffers: shared hit=4440
+               ->  Index Scan using "28842_28408_daily_pkey" on _timescaledb_internal._hyper_1_28842_chunk d_4  (cost=0.69..2.92 rows=1 width=55) (actual time=0.010..0.010
+rows=0 loops=444)
+                     Output: d_4.symbol, d_4.source, d_4.field, d_4.date, d_4.value
+                     Index Cond: ((d_4.symbol = t_2.symbol) AND (d_4.source = t_2.source) AND (d_4.field = t_2.field) AND (d_4.date >= '2017-01-25'::date) AND (d_4.date <=
+'2018-01-25'::date))
+                     Buffers: shared hit=2220
+               ->  Index Scan using "28834_28401_daily_pkey" on _timescaledb_internal._hyper_1_28834_chunk d_5  (cost=0.69..2.92 rows=1 width=55) (actual time=0.013..0.013
+rows=0 loops=444)
+                     Output: d_5.symbol, d_5.source, d_5.field, d_5.date, d_5.value
+                     Index Cond: ((d_5.symbol = t_2.symbol) AND (d_5.source = t_2.source) AND (d_5.field = t_2.field) AND (d_5.date >= '2017-01-25'::date) AND (d_5.date <=
+'2018-01-25'::date))
+                     Buffers: shared hit=2220
+   ->  Nested Loop  (cost=0.69..3832.00 rows=9184 width=54) (actual time=4.929..14.131 rows=141 loops=1)
+         Output: d_6.symbol, d_6.source, d_6.field, d_6.date, d_6.value
+         Buffers: shared hit=4444, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_3  (cost=0.00..16.50 rows=650 width=96) (actual time=0.010..0.069 rows=444 loops=1)
+               Output: t_3.symbol, t_3.source, t_3.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=54) (actual time=0.031..0.031 rows=0 loops=444)
+               Buffers: shared hit=4444
+               ->  Index Scan using "28834_28401_daily_pkey" on _timescaledb_internal._hyper_1_28834_chunk d_6  (cost=0.69..2.92 rows=1 width=55) (actual time=0.012..0.012
+rows=0 loops=444)
+                     Output: d_6.symbol, d_6.source, d_6.field, d_6.date, d_6.value
+                     Index Cond: ((d_6.symbol = t_3.symbol) AND (d_6.source = t_3.source) AND (d_6.field = t_3.field) AND (d_6.date >= '2018-01-25'::date) AND (d_6.date <=
+'2019-01-25'::date))
+                     Buffers: shared hit=2220
+               ->  Index Scan using "28835_28402_daily_pkey" on _timescaledb_internal._hyper_1_28835_chunk d_7  (cost=0.69..2.92 rows=1 width=54) (actual time=0.018..0.018
+rows=0 loops=444)
+                     Output: d_7.symbol, d_7.source, d_7.field, d_7.date, d_7.value
+                     Index Cond: ((d_7.symbol = t_3.symbol) AND (d_7.source = t_3.source) AND (d_7.field = t_3.field) AND (d_7.date >= '2018-01-25'::date) AND (d_7.date <=
+'2019-01-25'::date))
+                     Buffers: shared hit=2224
+   ->  Nested Loop  (cost=0.69..3832.00 rows=9985 width=53) (actual time=5.912..13.373 rows=251 loops=1)
+         Output: d_8.symbol, d_8.source, d_8.field, d_8.date, d_8.value
+         Buffers: shared hit=4496, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_4  (cost=0.00..16.50 rows=650 width=96) (actual time=0.018..0.075 rows=444 loops=1)
+               Output: t_4.symbol, t_4.source, t_4.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=53) (actual time=0.029..0.030 rows=1 loops=444)
+               Buffers: shared hit=4496
+               ->  Index Scan using "28837_28403_daily_pkey" on _timescaledb_internal._hyper_1_28837_chunk d_8  (cost=0.69..2.92 rows=1 width=53) (actual time=0.016..0.017
+rows=0 loops=444)
+                     Output: d_8.symbol, d_8.source, d_8.field, d_8.date, d_8.value
+                     Index Cond: ((d_8.symbol = t_4.symbol) AND (d_8.source = t_4.source) AND (d_8.field = t_4.field) AND (d_8.date >= '2019-01-25'::date) AND (d_8.date <=
+'2020-01-25'::date))
+                     Buffers: shared hit=2273
+               ->  Index Scan using "28835_28402_daily_pkey" on _timescaledb_internal._hyper_1_28835_chunk d_9  (cost=0.69..2.92 rows=1 width=54) (actual time=0.012..0.012
+rows=0 loops=444)
+                     Output: d_9.symbol, d_9.source, d_9.field, d_9.date, d_9.value
+                     Index Cond: ((d_9.symbol = t_4.symbol) AND (d_9.source = t_4.source) AND (d_9.field = t_4.field) AND (d_9.date >= '2019-01-25'::date) AND (d_9.date <=
+'2020-01-25'::date))
+                     Buffers: shared hit=2223
+   ->  Nested Loop  (cost=0.69..3833.63 rows=11099 width=54) (actual time=5.870..21.259 rows=3063 loops=1)
+         Output: d_10.symbol, d_10.source, d_10.field, d_10.date, d_10.value
+         Buffers: shared hit=7363, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_5  (cost=0.00..16.50 rows=650 width=96) (actual time=0.009..0.069 rows=444 loops=1)
+               Output: t_5.symbol, t_5.source, t_5.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.69..5.85 rows=2 width=54) (actual time=0.031..0.047 rows=7 loops=444)
+               Buffers: shared hit=7363
+               ->  Index Scan using "28837_28403_daily_pkey" on _timescaledb_internal._hyper_1_28837_chunk d_10  (cost=0.69..2.92 rows=1 width=53) (actual time=0.012..0.013
+ rows=0 loops=444)
+                     Output: d_10.symbol, d_10.source, d_10.field, d_10.date, d_10.value
+                     Index Cond: ((d_10.symbol = t_5.symbol) AND (d_10.source = t_5.source) AND (d_10.field = t_5.field) AND (d_10.date >= '2020-01-25'::date) AND (d_10.dat
+e <= '2021-01-25'::date))
+                     Buffers: shared hit=2237
+               ->  Index Scan using "28838_28404_daily_pkey" on _timescaledb_internal._hyper_1_28838_chunk d_11  (cost=0.70..2.92 rows=1 width=54) (actual time=0.018..0.033
+ rows=7 loops=444)
+                     Output: d_11.symbol, d_11.source, d_11.field, d_11.date, d_11.value
+                     Index Cond: ((d_11.symbol = t_5.symbol) AND (d_11.source = t_5.source) AND (d_11.field = t_5.field) AND (d_11.date >= '2020-01-25'::date) AND (d_11.dat
+e <= '2021-01-25'::date))
+                     Buffers: shared hit=5126
+   ->  Nested Loop  (cost=0.70..3835.25 rows=17505 width=55) (actual time=4.687..111.707 rows=40212 loops=1)
+         Output: d_12.symbol, d_12.source, d_12.field, d_12.date, d_12.value
+         Buffers: shared hit=45035, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_6  (cost=0.00..16.50 rows=650 width=96) (actual time=0.013..0.109 rows=444 loops=1)
+               Output: t_6.symbol, t_6.source, t_6.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.70..5.86 rows=2 width=55) (actual time=0.024..0.242 rows=91 loops=444)
+               Buffers: shared hit=45035
+               ->  Index Scan using "28838_28404_daily_pkey" on _timescaledb_internal._hyper_1_28838_chunk d_12  (cost=0.70..2.92 rows=1 width=54) (actual time=0.016..0.052
+ rows=20 loops=444)
+                     Output: d_12.symbol, d_12.source, d_12.field, d_12.date, d_12.value
+                     Index Cond: ((d_12.symbol = t_6.symbol) AND (d_12.source = t_6.source) AND (d_12.field = t_6.field) AND (d_12.date >= '2021-01-25'::date) AND (d_12.dat
+e <= '2022-01-25'::date))
+                     Buffers: shared hit=11017
+               ->  Index Scan using "28908_28474_daily_pkey" on _timescaledb_internal._hyper_1_28908_chunk d_13  (cost=0.70..2.92 rows=1 width=55) (actual time=0.020..0.182
+ rows=71 loops=444)
+                     Output: d_13.symbol, d_13.source, d_13.field, d_13.date, d_13.value
+                     Index Cond: ((d_13.symbol = t_6.symbol) AND (d_13.source = t_6.source) AND (d_13.field = t_6.field) AND (d_13.date >= '2021-01-25'::date) AND (d_13.dat
+e <= '2022-01-25'::date))
+                     Buffers: shared hit=34018
+   ->  Nested Loop  (cost=0.70..3836.88 rows=21869 width=58) (actual time=0.264..165.653 rows=53624 loops=1)
+         Output: d_14.symbol, d_14.source, d_14.field, d_14.date, d_14.value
+         Buffers: shared hit=58607 read=1, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_7  (cost=0.00..16.50 rows=650 width=96) (actual time=0.011..0.145 rows=444 loops=1)
+               Output: t_7.symbol, t_7.source, t_7.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.70..5.86 rows=2 width=58) (actual time=0.029..0.357 rows=121 loops=444)
+               Buffers: shared hit=58607 read=1
+               ->  Index Scan using "28908_28474_daily_pkey" on _timescaledb_internal._hyper_1_28908_chunk d_14  (cost=0.70..2.92 rows=1 width=55) (actual time=0.021..0.070
+ rows=19 loops=444)
+                     Output: d_14.symbol, d_14.source, d_14.field, d_14.date, d_14.value
+                     Index Cond: ((d_14.symbol = t_7.symbol) AND (d_14.source = t_7.source) AND (d_14.field = t_7.field) AND (d_14.date >= '2022-01-25'::date) AND (d_14.dat
+e <= '2023-01-25'::date))
+                     Buffers: shared hit=10604 read=1
+               ->  Index Scan using "28909_28475_daily_pkey" on _timescaledb_internal._hyper_1_28909_chunk d_15  (cost=0.70..2.92 rows=1 width=58) (actual time=0.024..0.275
+ rows=102 loops=444)
+                     Output: d_15.symbol, d_15.source, d_15.field, d_15.date, d_15.value
+                     Index Cond: ((d_15.symbol = t_7.symbol) AND (d_15.source = t_7.source) AND (d_15.field = t_7.field) AND (d_15.date >= '2022-01-25'::date) AND (d_15.dat
+e <= '2023-01-25'::date))
+                     Buffers: shared hit=48003
+   ->  Nested Loop  (cost=0.70..3838.50 rows=28696 width=61) (actual time=0.082..183.975 rows=66981 loops=1)
+         Output: d_16.symbol, d_16.source, d_16.field, d_16.date, d_16.value
+         Buffers: shared hit=72237 read=2, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_8  (cost=0.00..16.50 rows=650 width=96) (actual time=0.010..0.149 rows=444 loops=1)
+               Output: t_8.symbol, t_8.source, t_8.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.70..5.86 rows=2 width=61) (actual time=0.034..0.397 rows=151 loops=444)
+               Buffers: shared hit=72237 read=2
+               ->  Index Scan using "28909_28475_daily_pkey" on _timescaledb_internal._hyper_1_28909_chunk d_16  (cost=0.70..2.92 rows=1 width=58) (actual time=0.027..0.078
+ rows=22 loops=444)
+                     Output: d_16.symbol, d_16.source, d_16.field, d_16.date, d_16.value
+                     Index Cond: ((d_16.symbol = t_8.symbol) AND (d_16.source = t_8.source) AND (d_16.field = t_8.field) AND (d_16.date >= '2023-01-25'::date) AND (d_16.dat
+e <= '2024-01-25'::date))
+                     Buffers: shared hit=12243 read=2
+               ->  Index Scan using "28910_28476_daily_pkey" on _timescaledb_internal._hyper_1_28910_chunk d_17  (cost=0.70..2.92 rows=1 width=61) (actual time=0.028..0.306
+ rows=129 loops=444)
+                     Output: d_17.symbol, d_17.source, d_17.field, d_17.date, d_17.value
+                     Index Cond: ((d_17.symbol = t_8.symbol) AND (d_17.source = t_8.source) AND (d_17.field = t_8.field) AND (d_17.date >= '2023-01-25'::date) AND (d_17.dat
+e <= '2024-01-25'::date))
+                     Buffers: shared hit=59994
+   ->  Nested Loop  (cost=0.70..3838.50 rows=44878 width=62) (actual time=0.075..233.620 rows=112953 loops=1)
+         Output: d_18.symbol, d_18.source, d_18.field, d_18.date, d_18.value
+         Buffers: shared hit=118633 read=2, local hit=4
+         ->  Seq Scan on pg_temp_28.dailybulkselecttemp01 t_9  (cost=0.00..16.50 rows=650 width=96) (actual time=0.008..0.154 rows=444 loops=1)
+               Output: t_9.symbol, t_9.source, t_9.field
+               Buffers: local hit=4
+         ->  Append  (cost=0.70..5.86 rows=2 width=62) (actual time=0.029..0.500 rows=254 loops=444)
+               Buffers: shared hit=118633 read=2
+               ->  Index Scan using "30110_29642_daily_pkey" on _timescaledb_internal._hyper_1_30110_chunk d_18  (cost=0.70..2.92 rows=1 width=62) (actual time=0.029..0.398
+ rows=218 loops=444)
+                     Output: d_18.symbol, d_18.source, d_18.field, d_18.date, d_18.value
+                     Index Cond: ((d_18.symbol = t_9.symbol) AND (d_18.source = t_9.source) AND (d_18.field = t_9.field) AND (d_18.date >= '2024-01-25'::date) AND (d_18.dat
+e <= '2025-01-25'::date))
+                     Buffers: shared hit=100072
+               ->  Index Scan using "28910_28476_daily_pkey" on _timescaledb_internal._hyper_1_28910_chunk d_19  (cost=0.70..2.92 rows=1 width=61) (actual time=0.028..0.082
+ rows=37 loops=444)
+                     Output: d_19.symbol, d_19.source, d_19.field, d_19.date, d_19.value
+                     Index Cond: ((d_19.symbol = t_9.symbol) AND (d_19.source = t_9.source) AND (d_19.field = t_9.field) AND (d_19.date >= '2024-01-25'::date) AND (d_19.dat
+e <= '2025-01-25'::date))
+                     Buffers: shared hit=18561 read=2
+ Planning Time: 11.317 ms
+ Execution Time: 814.284 ms
+(164 rows)
+
