@@ -1,0 +1,1 @@
+explain (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) SELECT d.symbol, d."source" , d.field, d."date", d.value FROM research.daily d JOIN pg_temp.dailybulkselecttemp t ON t."symbol" = d."symbol" and t."source" = d."source" and t."field" = d."field" WHERE d."date" BETWEEN '2015-01-25' and '2025-01-25';
